@@ -5,14 +5,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppMaterialModule } from '../shared/app-material/app-material.module';
 import { LayoutDefaultModule } from '../shared/layout/layout-default/layout-default.module';
 import { SharedModule } from '../shared/shared.module';
-import { CourseRegistrationComponent } from './course-registration/course-registration.component';
+import { CourseRegistrationComponent } from './views/course-registration/course-registration.component';
 import { CoursesRoutingModule } from './courses-routing.module';
-import { CoursesComponent } from './courses/courses.component';
+import { CoursesComponent } from './views/courses/courses.component';
+import { CoursesListComponent } from './components/courses-list/courses-list.component';
 
 @NgModule({
   declarations: [
     CoursesComponent,
-    CourseRegistrationComponent
+    CourseRegistrationComponent,
+    CoursesListComponent
   ],
   imports: [
     CommonModule,
