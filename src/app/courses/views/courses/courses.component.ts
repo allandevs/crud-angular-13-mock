@@ -47,6 +47,10 @@ export class CoursesComponent implements OnInit {
     this.router.navigate(['new-course'], { relativeTo: this.route })
   }
 
+  editCourse(course: Course) {
+    this.router.navigate(['edit-course/',course.id], { relativeTo: this.route })
+  }
+
   public montarMockCursos() {
     const mock: Course[] = [
       { "id": "1", "nome": "Angular Mock", "categoria": "front-end" },

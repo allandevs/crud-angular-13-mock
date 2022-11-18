@@ -10,12 +10,17 @@ import { Course } from '../../models/course';
 export class CoursesListComponent {
   @Input() public courses!: Course[];
   @Output() public add = new EventEmitter(false);
+  @Output() public edit = new EventEmitter(false);
 
   public readonly displayedColumns = ['name', 'category', 'actions']
   constructor() { }
 
-  addCourse() {
+  public addCourse() {
     this.add.emit()
+  }
+
+  public editCourse(course: Course) {
+    this.edit.emit(course);
   }
 
 }

@@ -24,9 +24,33 @@ export class CoursesService {
     )
   }
 
+  getCourseId(id: string) {
+    return this.httpClient.get<Course>(`api/courses/${id}`).pipe(
+      map((json: any) => {
+        const curso = new Course(json)
+        return curso
+      })
+    )
+  }
+
   public saveCourse(course: Course) {
+    if (course.id) {
+      return this.updateCourse(course);
+    }
+    return this.createCourse(course);
+  }
+
+  private createCourse(course: Course) {
     const { nome, categoria } = course;
     return this.httpClient.post<Course>(`api/courses`, {
+      name: nome,
+      category: categoria
+    })
+  }
+
+  private updateCourse(course: Course) {
+    const { nome, categoria, id } = course;
+    return this.httpClient.put<Course>(`api/courses/${id}`, {
       name: nome,
       category: categoria
     })

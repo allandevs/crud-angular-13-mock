@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from '../../services/courses.service';
 
@@ -15,18 +16,25 @@ export class CourseRegistrationComponent implements OnInit {
 
   public registrationForm!: FormGroup;
   public isLoading: boolean = false;
+  public isForm: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private coursesService: CoursesService,
     private _snackBar: MatSnackBar,
     private location: Location,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.registrationForm = this.formBuilder.group({
+      id: [null],
       nome: [null, Validators.required],
       categoria: [null, Validators.required]
     })
+    this.route.params.subscribe(({ id }) => {
+      this.getCourseId(id)
+    });
   }
 
   public addCourse() {
@@ -56,6 +64,17 @@ export class CourseRegistrationComponent implements OnInit {
       },
       () => this.isLoading = false
     )
+  }
+
+  public getCourseId(id: string) {
+    this.coursesService.getCourseId(id).subscribe((course => {
+      if (course) {
+        this.registrationForm.patchValue(course);
+        this.isForm = true;
+      }
+    }), () => {
+      this.isForm = true;
+    })
   }
 
   public back() {
