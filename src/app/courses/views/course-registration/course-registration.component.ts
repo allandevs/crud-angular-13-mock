@@ -17,7 +17,7 @@ export class CourseRegistrationComponent implements OnInit {
   public registrationForm!: FormGroup;
   public isLoading: boolean = false;
   public isForm: boolean = false;
-
+  public isFormEdit: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     private coursesService: CoursesService,
@@ -29,10 +29,17 @@ export class CourseRegistrationComponent implements OnInit {
   ngOnInit(): void {
     this.registrationForm = this.formBuilder.group({
       id: [null],
-      nome: [null, Validators.required],
+      nome: [null, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100)]],
       categoria: [null, Validators.required]
     })
     this.route.params.subscribe(({ id }) => {
+      if (id) {
+        // Caso possua um id, alteramos texto de Cadastro novo curso para editar curso
+        this.isFormEdit = true;
+      }
       this.getCourseId(id)
     });
   }
@@ -42,8 +49,13 @@ export class CourseRegistrationComponent implements OnInit {
     this.coursesService.saveCourse(this.registrationForm.value).subscribe(
 
       () => {
+        const hasIdRecord = this.registrationForm.get('id')?.value
+        if (hasIdRecord) {
+          this.success('Curso atualizado com sucesso usando api.');
+          return
+        }
         this.success('Curso salvo com sucesso usando api.');
-        this.back();
+
       }
       ,
       () => {
@@ -62,7 +74,10 @@ export class CourseRegistrationComponent implements OnInit {
         //this.error();
         this.back();
       },
-      () => this.isLoading = false
+      () => {
+        this.back();
+        this.isLoading = false;
+      }
     )
   }
 

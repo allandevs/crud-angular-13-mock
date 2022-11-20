@@ -7,6 +7,8 @@ import { catchError } from 'rxjs/operators';
 import { Course } from '../../models/course';
 import { CoursesService } from '../../services/courses.service';
 import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfimationDialogComponent } from 'src/app/shared/components/confimation-dialog/confimation-dialog.component';
 
 @Component({
   selector: 'app-courses',
@@ -22,11 +24,15 @@ export class CoursesComponent implements OnInit {
     private coursesService: CoursesService,
     public dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private _snackBar: MatSnackBar,
   ) { this.montarMockCursos(); }
 
   ngOnInit(): void {
+    this.getCourses();
+  }
 
+  public getCourses() {
     this.courses$ = this.coursesService.list().pipe(
       catchError(err => {
         this.onError('Não foi possivel retornar os dados da api. As informações exibidas estão mockadas')
@@ -48,7 +54,30 @@ export class CoursesComponent implements OnInit {
   }
 
   editCourse(course: Course) {
-    this.router.navigate(['edit-course/',course.id], { relativeTo: this.route })
+    this.router.navigate(['edit-course/', course.id], { relativeTo: this.route })
+  }
+
+  deleteCourse(course: Course) {
+    const dialogRef = this.dialog.open(ConfimationDialogComponent, {
+      data: `Tem certeza que deseja remover o curso ${course.nome}?`,
+    });
+
+    dialogRef.afterClosed().subscribe((res: boolean) => {
+      // se o Res retorna true, ação delete é executada.
+      if (res) {
+        this.coursesService.deleteCourse(course.id).subscribe(() => {
+          this._snackBar.open(`Curso ${course.nome} removido com sucesso!`, 'X', {
+            duration: 5000,
+            verticalPosition: 'bottom',
+            horizontalPosition: 'center'
+          });
+          this.getCourses();
+        }, () => {
+          this.onError('Houve um erro ao tentar remover o curso')
+        })
+      }
+    })
+
   }
 
   public montarMockCursos() {

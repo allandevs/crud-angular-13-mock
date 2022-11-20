@@ -10,9 +10,15 @@
           [courses]="courses"
           (add)="addCourse()"
           (edit)="editCourse($event)"
+          (delete)="deleteCourse($event)"
         >
         </app-courses-list>
 
+        <section *ngIf="courses$ | async as courses">
+          <div [hidden]="courses.length !== 0">
+            ainda não possui cursos cadastrados
+          </div>
+        </section>
         <ng-template #loading>
           <div class="loading-spinner">
             <mat-spinner diameter="50"> </mat-spinner>

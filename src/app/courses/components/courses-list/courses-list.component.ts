@@ -11,6 +11,7 @@ export class CoursesListComponent {
   @Input() public courses!: Course[];
   @Output() public add = new EventEmitter(false);
   @Output() public edit = new EventEmitter(false);
+  @Output() public delete = new EventEmitter(false);
 
   public readonly displayedColumns = ['name', 'category', 'actions']
   constructor() { }
@@ -23,4 +24,7 @@ export class CoursesListComponent {
     this.edit.emit(course);
   }
 
+  public deleteCourse(course: Course) {
+    this.delete.emit(course);
+  }
 }

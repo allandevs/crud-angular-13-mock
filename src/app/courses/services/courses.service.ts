@@ -33,11 +33,19 @@ export class CoursesService {
     )
   }
 
+  /**
+  * @param saveCourse create or update course.
+  *
+  */
   public saveCourse(course: Course) {
     if (course.id) {
       return this.updateCourse(course);
     }
     return this.createCourse(course);
+  }
+
+  public deleteCourse(id: string) {
+    return this.httpClient.delete<Course>(`api/courses/${id}`)
   }
 
   private createCourse(course: Course) {
