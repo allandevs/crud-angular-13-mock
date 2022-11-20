@@ -1,6 +1,10 @@
 # CrudAngular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.1.
+Projeto desevolvido em angular 12 atualizado para o 13
+
+#Importante
+
+A aplicação comunica-se com uma api, porém funciona com dados MOCKADOS caso o serviço esteja offline.
 
 ## Development server
 

@@ -1,0 +1,21 @@
+mat-card {
+  text-align: center;
+  margin: 10px 24px;
+  .full-width {
+    width: 100%;
+  }
+}
+
+@media (max-width: 300px) {
+  mat-card {
+    min-width: 200px;
+  }
+}
+
+.loading-spinner {
+  padding: 25px;
+  background-color: rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
