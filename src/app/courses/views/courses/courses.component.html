@@ -5,20 +5,19 @@
         <span>Cursos disponiveis</span>
       </mat-toolbar>
       <section class="mat-elevation-z8 column-flex">
-        <app-courses-list
-          *ngIf="courses$ | async as courses; else loading"
-          [courses]="courses"
-          (add)="addCourse()"
-          (edit)="editCourse($event)"
-          (delete)="deleteCourse($event)"
-        >
-        </app-courses-list>
-
-        <section *ngIf="courses$ | async as courses">
-          <div [hidden]="courses.length !== 0">
-            ainda não possui cursos cadastrados
+        <div *ngIf="courses$ | async as courses; else loading">
+          <app-courses-list
+            [hidden]="!courses"
+            [courses]="courses"
+            (add)="addCourse()"
+            (edit)="editCourse($event)"
+            (delete)="deleteCourse($event)"
+          >
+          </app-courses-list>
+          <div *ngIf="!courses.length">
+            <span> ainda não possui cursos cadastrados </span>
           </div>
-        </section>
+        </div>
         <ng-template #loading>
           <div class="loading-spinner">
             <mat-spinner diameter="50"> </mat-spinner>
