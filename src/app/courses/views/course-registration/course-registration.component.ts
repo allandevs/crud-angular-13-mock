@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 
 import { CoursesService } from '../../services/courses.service';
+import { Course } from './../../models/course';
 
 
 @Component({
@@ -60,25 +61,46 @@ export class CourseRegistrationComponent implements OnInit {
       ,
       () => {
         /*TODO ao cair no bloco de erros, seguimos com a criação do um novo curso "mockado" gravando no local-storage, dessa forma
-        é possivel testar aplicação sem usar back-end :) */
-        const courses: any = localStorage.getItem('courses');
-        let modifyCourses: any = JSON.parse(courses)
-        let newObject = {
-          ...this.registrationForm.value,
-          id: modifyCourses.length + 1
-        }
+      é possivel testar aplicação sem usar back-end :) */
+        this.saveCourseMock();
 
-        modifyCourses.push(newObject)
-        localStorage.setItem('courses', JSON.stringify(modifyCourses));
-        this.success('Curso salvo usando dados mockados');
-        //this.error();
-        this.back();
       },
       () => {
         this.back();
         this.isLoading = false;
       }
     )
+  }
+
+  public saveCourseMock() {
+    const hasIdRecord = this.registrationForm.get('id')?.value
+    const courses: any = localStorage.getItem('courses');
+    let modifyCourses: any = JSON.parse(courses)
+    const nomeCurso = this.registrationForm.get('nome')?.value
+    const categoriaCurso = this.registrationForm.get('categoria')?.value
+
+    if (hasIdRecord) {
+      const updateCourse = modifyCourses.map((course: any) => {
+        if (course.id == hasIdRecord) {
+          return { ...course, nome: nomeCurso, categoria: categoriaCurso }
+        }
+        return course
+      })
+      localStorage.setItem('courses', JSON.stringify(updateCourse));
+      this.success('Curso atualizado usando os dados mockados')
+      this.back();
+      return
+    }
+    //Todo caso o curso não exista é criado um novo
+    let newObject = {
+      ...this.registrationForm.value,
+      id: modifyCourses?.length + 1
+    }
+    modifyCourses.push(newObject)
+    localStorage.setItem('courses', JSON.stringify(modifyCourses));
+    this.success('Curso salvo usando dados mockados');
+    //this.error();
+    this.back();
   }
 
   public getCourseId(id: string) {
@@ -89,6 +111,12 @@ export class CourseRegistrationComponent implements OnInit {
       }
     }), () => {
       this.isForm = true;
+      if (id) {
+        const courses: any = localStorage.getItem('courses');
+        let modifyCourses: any = JSON.parse(courses);
+        const course = modifyCourses.filter((course: Course) => course.id == id)
+        this.registrationForm.patchValue(course[0]);
+      }
     })
   }
 

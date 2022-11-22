@@ -26,10 +26,11 @@ export class CoursesComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private _snackBar: MatSnackBar,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getCourses();
+    this.montarMockCursos();
   }
 
   public getCourses() {
